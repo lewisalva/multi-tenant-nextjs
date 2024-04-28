@@ -8,5 +8,8 @@ export default {
   dbCredentials: {
     connectionString: env.DATABASE_URL,
   },
+  strict: false,
+  verbose: false,
   tablesFilter: ["multi-tenant-nextjs_*"],
+  out: './drizzle',
 } satisfies Config;

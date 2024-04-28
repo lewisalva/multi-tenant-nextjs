@@ -1,34 +1,72 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
+import { relations } from 'drizzle-orm';
+import { boolean, pgEnum, pgTable, primaryKey, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-import { sql } from "drizzle-orm";
-import {
-  index,
-  pgTableCreator,
-  serial,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+/* Table Definitions */
+export const organizationsTable = pgTable('organizations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull().default(''),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = pgTableCreator((name) => `multi-tenant-nextjs_${name}`);
+export const usersTable = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull().default(''),
+  email: text('email').notNull().unique(),
+  hashedPassword: text('hashed_password').notNull(),
+  isPlatformAdmin: boolean('is_platform_admin').notNull().default(false),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
 
-export const posts = createTable(
-  "post",
+export const sessionsTable = pgTable('sessions', {
+  id: text('id').primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp('expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).notNull(),
+});
+
+export const userPermissionsEnum = pgEnum('permission', ['member', 'admin']);
+export const usersOrganizationsTable = pgTable(
+  'users_organizations',
   {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => usersTable.id, { onDelete: 'cascade' }),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizationsTable.id, { onDelete: 'cascade' }),
+    permission: userPermissionsEnum('permission').notNull().default('member'),
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at').defaultNow(),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.userId, table.organizationId] }),
+    };
+  }
 );
+
+/* Relation Definitions */
+export const organizationRelations = relations(organizationsTable, ({ many }) => ({
+  users: many(usersOrganizationsTable),
+}));
+
+export const usersRelations = relations(usersTable, ({ many }) => ({
+  organizations: many(usersOrganizationsTable),
+}));
+
+export const usersOrgnaizationsRelations = relations(usersOrganizationsTable, ({ one }) => ({
+  organization: one(organizationsTable, {
+    fields: [usersOrganizationsTable.organizationId],
+    references: [organizationsTable.id],
+  }),
+  user: one(usersTable, {
+    fields: [usersOrganizationsTable.userId],
+    references: [usersTable.id],
+  }),
+}));
