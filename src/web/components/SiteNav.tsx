@@ -38,8 +38,8 @@ const NavItems = ({ isInStaticNav = true }) => {
           href={item.href}
           className={clsx(
             item.current
-              ? `bg-gray-${isInStaticNav ? '200' : '100'} text-gray-900`
-              : `text-gray-${isInStaticNav ? '700' : '600'} hover:bg-gray-50 hover:text-gray-900`,
+              ? `${isInStaticNav ? 'bg-gray-200' : 'bg-gray-100'} text-gray-900`
+              : `${isInStaticNav ? 'text-gray-700' : 'text-gray-600'} hover:bg-gray-50 hover:text-gray-900`,
             isInStaticNav ? 'text-sm' : 'text-base leading-5',
             'group flex items-center rounded-md px-2 py-2 font-medium'
           )}
