@@ -1,33 +1,19 @@
-'use client';
+import { redirect } from 'next/navigation';
+import { auth } from '../authentication';
+import { type ReactNode } from 'react';
+import Portal from '../../web/components/pages/Portal';
+import { findOrganizationsForUser } from '../../server/models/Organization';
 
-import { type ReactNode, useState } from 'react';
-
-import { SiteNav } from '~/web/components/SiteNav';
-import { OrganizationContextProvider } from '~/web/contexts/OrganizationContext';
-import { useAuthenticationContext } from '~/web/contexts/useAuthenticationContext';
-import { useRouter } from 'next/navigation';
-
-export const PortalTemplate = ({ children }: { children: ReactNode}) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isLoggedIn } = useAuthenticationContext();
-  const router = useRouter();
-
-  if (isLoggedIn !== true) {
-    router.push('/');
-    return null;
+export default async function PortalLayout({ children }: { children: ReactNode }) {
+  const user = await auth();
+  if (!user) {
+    return redirect('/signin');
   }
+  const organizations = await findOrganizationsForUser(user);
 
   return (
-    <OrganizationContextProvider>
-      <div className="min-h-full">
-        <SiteNav sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
-          <main className="flex-1">
-            {children}
-          </main>
-        </SiteNav>
-      </div>
-    </OrganizationContextProvider>
+    <Portal orgs={organizations}>
+      {children}
+    </Portal>
   );
-};
-
-export default PortalTemplate
+}

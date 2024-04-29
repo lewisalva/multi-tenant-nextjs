@@ -1,17 +1,15 @@
-'use client';
-
 import { useRouter } from "next/navigation";
-import { useAuthenticationContext } from "../../web/contexts/useAuthenticationContext";
+import { auth } from "~/app/authentication";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { isLoggedIn } = useAuthenticationContext();
+  const user = auth();
   const router = useRouter();
 
-  if (isLoggedIn === true) {
+  if (user !== null) {
     void router.push('/portal/organizations');
     return null;
   }

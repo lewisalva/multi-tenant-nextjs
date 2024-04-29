@@ -3,7 +3,7 @@ import { Elysia } from 'elysia';
 import { Lucia, verifyRequestOrigin } from 'lucia';
 
 import { sessionsTable, usersTable } from '../db/schema';
-import {db} from '../db';
+import { db } from '../db';
 import { env } from '../../env';
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessionsTable, usersTable);
@@ -18,6 +18,7 @@ export const lucia = new Lucia(adapter, {
     return {
       email: attributes.email,
       isPlatformAdmin: attributes.isPlatformAdmin,
+      name: attributes.name,
     };
   },
 });
@@ -28,6 +29,7 @@ declare module 'lucia' {
     DatabaseUserAttributes: {
       email: string;
       isPlatformAdmin: boolean;
+      name: string;
     };
   }
 }

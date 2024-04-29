@@ -18,16 +18,18 @@ export type OrganizationContextType = {
 
 type Props = {
   children: React.ReactNode;
+  orgs?: OrganizationsType;
 };
 
 export const OrganizationContext = createContext<OrganizationContextType | null>(null);
 
-export const OrganizationContextProvider = ({ children }: Props) => {
-  const [selectedOrganization, setSelectedOrganization] = useState<OrganizationType | undefined>();
+export const OrganizationContextProvider = ({ children, orgs = [] }: Props) => {
+  const [selectedOrganization, setSelectedOrganization] = useState<OrganizationType | undefined>(orgs[0]);
   const { data: organizations, refetch } = useQuery({
     queryKey: ['organizations'],
     queryFn: () => getOrganizations(),
-    initialData: [],
+    initialData: orgs,
+    staleTime: 5000,
   });
 
   const createOrganization = useCallback(

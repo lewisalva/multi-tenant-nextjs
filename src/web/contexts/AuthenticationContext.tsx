@@ -14,14 +14,17 @@ export type AuthenticationContextType = {
 
 type Props = {
   children: React.ReactNode;
+  user: User | null;
 };
 
 export const AuthenticationContext = createContext<AuthenticationContextType | null>(null);
 
-export const AuthenticationContextProvider = ({ children }: Props) => {
-  const { data: user, refetch } = useQuery({
+export const AuthenticationContextProvider = ({ children, user }: Props) => {
+  const { data: currentUser, refetch } = useQuery({
     queryKey: ['validateSession'],
     queryFn: () => getUser(),
+    initialData: user,
+    staleTime: 5000,
   });
 
   const signIn = async (email: string, password: string) => {
@@ -43,8 +46,8 @@ export const AuthenticationContextProvider = ({ children }: Props) => {
   };
 
   const defaultValue: AuthenticationContextType = {
-    user,
-    isLoggedIn: !!user,
+    user: currentUser,
+    isLoggedIn: !!currentUser,
     signIn,
     signUp,
     signOut,
