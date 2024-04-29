@@ -1,7 +1,7 @@
 import { treaty } from '@elysiajs/eden';
 import { describe, expect, test } from 'bun:test';
 
-import { getAuthHeaders } from '../../../tests/utils';
+import { getAuthHeaders } from '~/server/tests/utils';
 import { usersRouter } from './users.router';
 
 const usersApi = treaty(usersRouter);

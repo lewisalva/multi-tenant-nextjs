@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 
-import { ensureAuthentication, lucia } from '../../../../server/globalMiddleware/authentication';
+import { ensureAuthentication, lucia } from '../../globalMiddleware/authentication';
 
 export const signoutPost = new Elysia()
   .use(ensureAuthentication)

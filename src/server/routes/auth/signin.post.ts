@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 
-import { checkUserPassword, createSessionCookie, loginUserSchema } from '../../../../server/models/User';
+import { checkUserPassword, createSessionCookie, loginUserSchema } from '../../models/User';
 
 export const signinPost = new Elysia().post(
   '/signin',

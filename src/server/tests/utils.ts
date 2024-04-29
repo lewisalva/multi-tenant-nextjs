@@ -1,7 +1,7 @@
 import { treaty } from '@elysiajs/eden';
 import { type User } from 'lucia';
 
-import { authRouter } from '~/app/api/[[...slugs]]/auth/auth.router';
+import { authRouter } from '~/server/routes/auth/auth.router';
 import { organizationsTable, usersOrganizationsTable, usersTable } from '~/server/db/schema';
 import { db } from '../db';
 

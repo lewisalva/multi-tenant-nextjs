@@ -1,14 +1,14 @@
 import { Elysia } from 'elysia';
 
-import { ensureAuthentication } from '../../../../server/globalMiddleware/authentication';
-import { isUserAdminForOrganization } from '../../../../server/globalMiddleware/authorization';
+import { ensureAuthentication } from '../../globalMiddleware/authentication';
+import { isUserAdminForOrganization } from '../../globalMiddleware/authorization';
 import {
   createOrganization,
   createOrganizationSchema,
   deleteOrganization,
   findOrganizationsForUser,
   updateOrganization,
-} from '../../../../server/models/Organization';
+} from '../../models/Organization';
 import { membersRouter } from './members/members.router';
 
 export const organizationsRouter = new Elysia({ prefix: '/organizations' })

@@ -1,7 +1,7 @@
 import { Elysia, error } from 'elysia';
 
-import { ensureAuthentication } from '../../../../server/globalMiddleware/authentication';
-import { findUser, updateUser, updateUserSchema } from '../../../../server/models/User';
+import { ensureAuthentication } from '../../globalMiddleware/authentication';
+import { findUser, updateUser, updateUserSchema } from '../../models/User';
 
 export const usersRouter = new Elysia({ prefix: '/users' })
   .use(ensureAuthentication)
