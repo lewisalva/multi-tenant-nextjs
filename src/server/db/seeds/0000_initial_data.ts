@@ -1,16 +1,15 @@
-import 'dotenv/config';
-
 import { eq } from 'drizzle-orm';
 
-import { db } from '~/server/db';
-import { organizationsTable, usersOrganizationsTable, usersTable } from '~/server/db/schema';
+import { db } from '../';
+import { organizationsTable, usersOrganizationsTable, usersTable } from '../schema';
+import { env } from '../../../env';
 
 const {
   INITIAL_ADMIN_EMAIL = '',
   INITIAL_ADMIN_PASS = '',
   INITIAL_ADMIN_NAME = '',
   INITIAL_ORG = 'J1Support',
-} = process.env;
+} = env;
 
 export const initial_data = async () => {
   const initialUser: (typeof usersTable)['$inferInsert'] = {

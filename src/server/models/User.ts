@@ -3,8 +3,8 @@ import { createSelectSchema } from 'drizzle-typebox';
 import { type Static, t } from 'elysia';
 
 import { lucia } from '../globalMiddleware/authentication';
-import { db } from '~/server/db';
-import { usersTable } from '~/server/db/schema';
+import { db } from '../db';
+import { usersTable } from '../db/schema';
 
 export const selectUserSchema = createSelectSchema(usersTable);
 

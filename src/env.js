@@ -14,6 +14,7 @@ export const env = createEnv({
     INITIAL_ADMIN_NAME: z.string(),
     INITIAL_ADMIN_EMAIL: z.string(),
     INITIAL_ADMIN_PASS: z.string(),
+    INITIAL_ORG: z.string().default('J1Support'),
   },
 
   /**
@@ -35,6 +36,7 @@ export const env = createEnv({
     INITIAL_ADMIN_NAME: process.env.INITIAL_ADMIN_NAME,
     INITIAL_ADMIN_EMAIL: process.env.INITIAL_ADMIN_EMAIL,
     INITIAL_ADMIN_PASS: process.env.INITIAL_ADMIN_PASS,
+    INITIAL_ORG: process.env.INITIAL_ORG,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

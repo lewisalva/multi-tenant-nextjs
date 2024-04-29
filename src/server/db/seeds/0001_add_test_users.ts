@@ -1,6 +1,6 @@
-import { db } from '~/server/db';
-import { type User } from '~/server/models/User';
-import { usersTable } from '~/server/db/schema';
+import { db } from '../';
+import { type User } from '../../models/User';
+import { usersTable } from '../schema';
 
 const emailDomain = 'example.com';
 const userCount = 100;
