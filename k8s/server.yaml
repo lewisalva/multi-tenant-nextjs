@@ -22,6 +22,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: "postgres://admin:jmapnp6hzbfqu3XQD@fh-postgres.fh.svc.cluster.local:5432/filmhub"
           resources:
             limits:
               memory: "1Gi"

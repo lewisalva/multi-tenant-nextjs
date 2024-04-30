@@ -22,7 +22,7 @@ COPY . .
 
 ENV NODE_ENV production
 
-RUN bun --bun run build
+RUN SKIP_ENV_VALIDATION=true bun --bun run build
 
 
 # Production image, copy all the files and run next

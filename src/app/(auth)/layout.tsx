@@ -1,17 +1,15 @@
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { auth } from "~/app/authentication";
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const user = auth();
-  const router = useRouter();
+  const user = await auth();
 
   if (user !== null) {
-    void router.push('/portal/organizations');
-    return null;
+    return redirect('/portal/organizations');
   }
 
   return children;

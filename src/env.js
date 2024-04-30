@@ -11,9 +11,9 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    INITIAL_ADMIN_NAME: z.string(),
-    INITIAL_ADMIN_EMAIL: z.string(),
-    INITIAL_ADMIN_PASS: z.string(),
+    INITIAL_ADMIN_NAME: z.string().default(''),
+    INITIAL_ADMIN_EMAIL: z.string().default(''),
+    INITIAL_ADMIN_PASS: z.string().default(''),
     INITIAL_ORG: z.string().default('J1Support'),
   },
 

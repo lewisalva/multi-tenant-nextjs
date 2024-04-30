@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fh-postgres-config
+  labels:
+    app: fh-postgres
+data:
+  POSTGRES_DB: filmhub
+  POSTGRES_USER: admin
+  POSTGRES_PASSWORD: jmapnp6hzbfqu3XQD
+  PGDATA: /var/lib/postgresql/data/pgdata
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: fh-postgres-pv-volume2
+  labels:
+    type: local
+    app: fh-postgres
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data2"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: fh-postgres-pv-claim2
+  labels:
+    app: fh-postgres
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fh-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fh-postgres
+  template:
+    metadata:
+      labels:
+        app: fh-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: fh-postgres-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: fh-postgredb
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+      volumes:
+        - name: fh-postgredb
+          persistentVolumeClaim:
+            claimName: fh-postgres-pv-claim2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fh-postgres
+  labels:
+    app: fh-postgres
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+      targetPort: 5432
+      nodePort: 30040
+  selector:
+    app: fh-postgres
