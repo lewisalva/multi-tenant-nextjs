@@ -9,7 +9,7 @@ import { useOrganizationMembersContext } from '~/web/contexts/useOrganizationMem
 import { dayjs } from '~/web/utilities/dayjs';
 import { MemberAdd } from './MemberAdd';
 import { MemberEdit } from './MemberEdit';
-import { type OrganizationMembersType } from '../../../../web/services/organizationMembers';
+import { type OrganizationMembersType } from '../../../../../web/services/organizationMembers';
 
 const Table = ({organizationMembers, setSelectedOrganizationMember}: { organizationMembers: OrganizationMembersType; setSelectedOrganizationMember: (member: OrganizationMembersType[number]) => void }) => {
   return (

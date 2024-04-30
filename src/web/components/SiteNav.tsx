@@ -7,8 +7,10 @@ import { CurrentUserCard } from './CurrentUserCard';
 import { Logo } from './Logo';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useOrganizationContext } from '../contexts/useOrganizationContext';
 
 const NavItems = ({ isInStaticNav = true }) => {
+  const { selectedOrganization } = useOrganizationContext();
   const pathname = usePathname();
 
   const navigation = useMemo(() => {
@@ -19,16 +21,19 @@ const NavItems = ({ isInStaticNav = true }) => {
         icon: HomeIcon,
         current: pathname === '/portal/organizations',
       },
-      {
-        name: 'Members',
-        href: '/portal/organizations/members',
-        icon: Bars4Icon,
-        current: pathname === '/portal/organizations/members',
-      },
     ];
 
+    if (selectedOrganization) {
+      navigation.push({
+        name: 'Members',
+        href: `/portal/organizations/${selectedOrganization.id}/members`,
+        icon: Bars4Icon,
+        current: pathname === `/portal/organizations/${selectedOrganization.id}/members`,
+      });
+    }
+
     return navigation;
-  }, [pathname]);
+  }, [pathname, selectedOrganization]);
 
   return (
     <>

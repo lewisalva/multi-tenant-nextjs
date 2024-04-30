@@ -8,7 +8,7 @@ import { ContentHeader } from '~/web/components/ContentHeader';
 import { SidePanel } from '~/web/components/SidePanel';
 import { useOrganizationContext } from '~/web/contexts/useOrganizationContext';
 import { type OrganizationType } from '~/web/services/organizations';
-import { randomColor } from '~/web/utilities/randomColor';
+import { colorByIndex/*, randomColor*/ } from '~/web/utilities/randomColor';
 import { OrganizationCreate } from './OrganizationCreate';
 
 type OrganizationCardProps = {
@@ -16,6 +16,7 @@ type OrganizationCardProps = {
   loading?: boolean;
   organization: OrganizationType;
   setSelectedOrganization: () => void;
+  index: number;
 };
 
 const OrganizationCard = ({
@@ -23,8 +24,10 @@ const OrganizationCard = ({
   // loading,
   organization,
   setSelectedOrganization,
+  index,
 }: OrganizationCardProps) => {
-  const cardColor = useMemo(() => randomColor(), []);
+  // const cardColor = useMemo(() => randomColor(), []);
+  const cardColor = useMemo(() => colorByIndex(index), [index]);
 
   return (
     <li
@@ -70,12 +73,13 @@ export const Organizations = () => {
       </ContentHeader>
       <div className="container mx-auto sm:px-6 lg:px-8">
         <ul role="list" className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-          {organizations.map((organization) => (
+          {organizations.map((organization, index) => (
             <OrganizationCard
               key={organization.id}
               organization={organization}
               isSelected={selectedOrganization?.id === organization.id}
               setSelectedOrganization={() => setSelectedOrganization(organization)}
+              index={index}
             />
           ))}
         </ul>

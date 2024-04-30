@@ -26,13 +26,14 @@ export type OrganizationMembersContextType = {
 
 type Props = {
   children: React.ReactNode;
+  members: OrganizationMembersType
 };
 
 export const OrganizationMembersContext = createContext<OrganizationMembersContextType | null>(
   null
 );
 
-export const OrganizationMembersContextProvider = ({ children }: Props) => {
+export const OrganizationMembersContextProvider = ({ children, members = [] }: Props) => {
   const [selectedOrganizationMember, setSelectedOrganizationMember] = useState<
     OrganizationMemberType | undefined
   >(undefined);
@@ -44,11 +45,11 @@ export const OrganizationMembersContextProvider = ({ children }: Props) => {
   } = useQuery({
     queryKey: ['organizationMembers', selectedOrganization?.id],
     queryFn: () => {
-      if (selectedOrganization) {
-        return getOrganizationMembers(selectedOrganization?.id);
-      }
-      return [];
+      return getOrganizationMembers(selectedOrganization!.id);
     },
+    initialData: members,
+    staleTime: 5000,
+    enabled: !!selectedOrganization,
   });
 
   const addOrganizationMember = useCallback(

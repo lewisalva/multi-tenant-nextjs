@@ -24,3 +24,8 @@ export const randomColor = () => {
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex];
 };
+
+export const colorByIndex = (index = 0) => {
+  const colors = Object.values(tailwindColors);
+  return colors[index % colors.length];
+}
