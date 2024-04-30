@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fh-server-app
+  labels:
+    app: fh-server-app
+    group: fh-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fh-server-app
+  template:
+    metadata:
+      labels:
+        app: fh-server-app
+        group: fh-server
+    spec:
+      containers:
+        - name: fh-server-app
+          image: gitea.opracs.com/lewisalva/fh-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fh-server-app
+  labels:
+    group: fh-server
+spec:
+  type: ClusterIP
+  selector:
+    app: fh-server-app
+  ports:
+    - port: 3000
+      targetPort: 3000

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fh-ngrok-ingress
+spec:
+  ingressClassName: ngrok
+  rules:
+    - host: fh-jaysserver.ngrok.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fh-server-app
+                port:
+                  number: 3000
