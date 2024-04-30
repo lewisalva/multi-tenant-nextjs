@@ -6,7 +6,7 @@ import { type FormEvent } from 'react';
 import { Logo } from '~/web/components/Logo';
 import { useAuthenticationContext } from '~/web/contexts/useAuthenticationContext';
 
-export const Signup = () => {
+const Signup = () => {
   const { signUp } = useAuthenticationContext();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

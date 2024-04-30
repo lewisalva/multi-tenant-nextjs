@@ -139,6 +139,7 @@ export const generateUsersAndOrgsForTest = async (testName: string) => {
 export type GenerateUsersAndOrgsType = Awaited<ReturnType<typeof generateUsersAndOrgsForTest>>;
 
 export const toSimpleUser = (user: CreateUser): User => ({
+  name: user.name,
   email: user.email,
   id: user.id + '',
   isPlatformAdmin: user.isPlatformAdmin,

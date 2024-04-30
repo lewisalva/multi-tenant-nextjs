@@ -6,7 +6,7 @@ import { Logo } from '~/web/components/Logo';
 import { useAuthenticationContext } from '~/web/contexts/useAuthenticationContext';
 import Link from 'next/link';
 
-export const Signin = () => {
+const Signin = () => {
   const { signIn } = useAuthenticationContext();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
