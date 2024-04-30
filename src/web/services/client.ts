@@ -2,8 +2,8 @@ import { treaty } from '@elysiajs/eden';
 
 import type { API } from '~/server/routes';
 
-export const client = treaty<API>('/');
-export const authenticatedClient = treaty<API>('/', {
+export const client = treaty<API>(window.location.origin);
+export const authenticatedClient = treaty<API>(window.location.origin, {
   fetch: { credentials: 'include' },
 });
 

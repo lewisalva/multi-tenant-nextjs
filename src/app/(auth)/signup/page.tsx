@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { type FormEvent } from 'react';
 
 import { Logo } from '~/web/components/Logo';
 import { useAuthenticationContext } from '~/web/contexts/useAuthenticationContext';
 
 const Signup = () => {
+  const router = useRouter();
   const { signUp } = useAuthenticationContext();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const { name, email, password } = {
@@ -18,7 +20,8 @@ const Signup = () => {
       password: data.get('password')!.toString() + '',
     };
     try {
-      void signUp(name, email, password);
+      await signUp(name, email, password);
+      router.push('/portal');
     } catch (error) {
       console.error(error);
     }

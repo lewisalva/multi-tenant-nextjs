@@ -5,8 +5,10 @@ import { type FormEvent } from 'react';
 import { Logo } from '~/web/components/Logo';
 import { useAuthenticationContext } from '~/web/contexts/useAuthenticationContext';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Signin = () => {
+  const router = useRouter();
   const { signIn } = useAuthenticationContext();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -18,6 +20,7 @@ const Signin = () => {
     };
     try {
       await signIn(body.email, body.password);
+      router.push('/portal');
     } catch (error) {
       console.error(error);
     }
