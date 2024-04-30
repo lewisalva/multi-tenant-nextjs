@@ -41,5 +41,5 @@ jobs:
       env:
         KUBECONFIG: ~/kube.config
       run: |
-        kubectl set image -n couchsurfing deployment/fh-server-app fh-server-app=gitea.opracs.com/${{ secrets.DOCKER_USERNAME }}/fh-server:$GITHUB_SHA
+        kubectl set image -n fh deployment/fh-server-app fh-server-app=gitea.opracs.com/${{ secrets.DOCKER_USERNAME }}/fh-server:$GITHUB_SHA
 
