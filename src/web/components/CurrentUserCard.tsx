@@ -6,7 +6,6 @@ import { Fragment } from 'react';
 import { useAuthenticationContext } from '../contexts/useAuthenticationContext';
 import { useOrganizationContext } from '../contexts/useOrganizationContext';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const MenuItems = () => {
   const itemGroups = [
@@ -52,7 +51,7 @@ export const CurrentUserCard = ({ isInStaticNav = true }) => {
         <Menu.Button className="group w-full rounded-md bg-gray-100 px-3.5 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
           <span className="flex w-full items-center justify-between">
             <span className="flex min-w-0 items-center justify-between space-x-3">
-              <Image
+              <img
                 className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
                 src="https://images.unsplash.com/photo-1654013313410-c7b0044462dd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&w=256&h=256&q=80"
                 alt={user?.name ?? 'User'}
