@@ -19,13 +19,13 @@ const tailwindColors = {
   zinc: 'bg-zinc-600',
 } as const;
 
+export const colorsUsed = Object.values(tailwindColors);
+
 export const randomColor = () => {
-  const colors = Object.values(tailwindColors);
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[randomIndex];
+  const randomIndex = Math.floor(Math.random() * colorsUsed.length);
+  return colorsUsed[randomIndex];
 };
 
 export const colorByIndex = (index = 0) => {
-  const colors = Object.values(tailwindColors);
-  return colors[index % colors.length];
+  return colorsUsed[index % colorsUsed.length];
 }
