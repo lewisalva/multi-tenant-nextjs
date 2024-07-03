@@ -1,5 +1,9 @@
-import { authenticatedClient, type Schema } from './client';
-import { queryClient } from './queryClient';
+'use server'
+
+import { addUserToOrganization, findUsersInOrganization, removeUserFromOrganization, updateUserInOrganization } from '../../server/models/OrganizationMember';
+import { findUserIdByEmail } from '../../server/models/User';
+import { type Schema } from '../services/client';
+import { queryClient } from '../services/queryClient';
 
 export type OrganizationMembersType =
   Schema['api']['organizations'][':organizationId']['members']['get']['response']['200'];
@@ -22,15 +26,9 @@ const updateQueryClientWithMembers = (members: OrganizationMembersType): void =>
 export const getOrganizationMembers = async (
   organizationId: OrganizationMemberType['organizationId']
 ) => {
-  const { data, status } = await authenticatedClient.api
-    .organizations({ organizationId })
-    .members.get();
+  const data = await findUsersInOrganization(organizationId);
 
-  if (status !== 200 || !data) {
-    throw new Error('Failed to fetch organization members');
-  }
-
-  window.setTimeout(() => updateQueryClientWithMembers(data), 0);
+  setTimeout(() => updateQueryClientWithMembers(data), 0);
 
   console.log(data);
 
@@ -38,26 +36,26 @@ export const getOrganizationMembers = async (
 };
 
 export const postOrganizationMember = async (body: OrganizationMemberCreateType) => {
-  const { status } = await authenticatedClient.api
-    .organizations({ organizationId: body.organizationId })
-    .members.post(body);
-
-  if (status !== 201) {
-    throw new Error('Failed to create organization member');
+  let userId = body.userId;
+  if (body.email) {
+    userId = await findUserIdByEmail(body.email);
   }
+
+  if (!userId) {
+    return false
+  }
+
+  await addUserToOrganization({
+    userId,
+    organizationId: body.organizationId,
+    permission: body.permission,
+  });
 
   return true;
 };
 
 export const putOrganizationMember = async (body: OrganizationMemberUpdateType) => {
-  const { status } = await authenticatedClient.api
-    .organizations({ organizationId: body.organizationId })
-    .members({ userId: body.userId })
-    .put(body);
-
-  if (status !== 204) {
-    throw new Error('Failed to update organization member');
-  }
+  await updateUserInOrganization(body);
 
   return true;
 };
@@ -66,14 +64,10 @@ export const deleteOrganizationMember = async ({
   organizationId,
   userId,
 }: OrganizationMemberDeleteType) => {
-  const { status } = await authenticatedClient.api
-    .organizations({ organizationId })
-    .members({ userId })
-    .delete();
-
-  if (status !== 204) {
-    throw new Error('Failed to delete organization member');
-  }
+  await removeUserFromOrganization({
+    userId,
+    organizationId,
+  });
 
   return true;
 };

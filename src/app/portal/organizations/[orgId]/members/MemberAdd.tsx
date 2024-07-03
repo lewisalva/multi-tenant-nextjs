@@ -6,11 +6,12 @@ import { type FormEvent, useState } from 'react';
 
 import { useOrganizationContext } from '~/web/contexts/useOrganizationContext';
 import { useOrganizationMembersContext } from '~/web/contexts/useOrganizationMembersContext';
+import { postOrganizationMember } from '~/web/actions/organizationMembers';
 
 export const MemberAdd = ({ closePanel }: { closePanel: () => void }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { selectedOrganization } = useOrganizationContext();
-  const { addOrganizationMember } = useOrganizationMembersContext();
+  const { reloadOrganizationMembers } = useOrganizationMembersContext();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true);
@@ -22,7 +23,8 @@ export const MemberAdd = ({ closePanel }: { closePanel: () => void }) => {
       organizationId: selectedOrganization?.id ?? '',
     };
     try {
-      await addOrganizationMember(body);
+      await postOrganizationMember(body);
+      await reloadOrganizationMembers();
       closePanel();
     } catch (error) {
       console.error(error);

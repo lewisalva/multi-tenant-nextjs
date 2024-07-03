@@ -6,6 +6,7 @@ import { type FormEvent, useState } from 'react';
 
 import { useOrganizationMembersContext } from '~/web/contexts/useOrganizationMembersContext';
 import { type OrganizationMemberType } from '~/web/services/organizationMembers';
+import { deleteOrganizationMember, putOrganizationMember } from '~/web/actions/organizationMembers';
 
 export const MemberEdit = ({
   closePanel,
@@ -15,7 +16,7 @@ export const MemberEdit = ({
   member?: OrganizationMemberType;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { removeOrganizationMember, updateOrganizationMember } = useOrganizationMembersContext();
+  const { reloadOrganizationMembers } = useOrganizationMembersContext();
 
   if (!member) {
     return null;
@@ -31,7 +32,8 @@ export const MemberEdit = ({
       organizationId: member.organizationId,
     };
     try {
-      await updateOrganizationMember(body);
+      await putOrganizationMember(body);
+      await reloadOrganizationMembers();
       closePanel();
     } catch (error) {
       console.error(error);
@@ -44,10 +46,11 @@ export const MemberEdit = ({
     setIsSubmitting(true);
 
     try {
-      await removeOrganizationMember({
+      await deleteOrganizationMember({
         userId: member.userId,
         organizationId: member.organizationId,
       });
+      await reloadOrganizationMembers();
       closePanel();
     } catch (error) {
       console.error(error);
@@ -156,7 +159,7 @@ export const MemberEdit = ({
       <div className="flex flex-shrink-0 justify-between px-4 py-4">
         <button
           type="button"
-          className="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-black shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-400"
+          className="rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-400"
           onClick={handleRemove}
           disabled={isSubmitting}
         >
@@ -175,7 +178,7 @@ export const MemberEdit = ({
             className="ml-4 inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             disabled={isSubmitting}
           >
-            Add
+            Save
           </button>
         </div>
       </div>
