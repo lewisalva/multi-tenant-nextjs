@@ -9,11 +9,9 @@ import {
   findOrganizationsForUser,
   updateOrganization,
 } from '../../models/Organization';
-import { membersRouter } from './members/members.router';
 
 export const organizationsRouter = new Elysia({ prefix: '/organizations' })
   .use(ensureAuthentication)
-  .use(membersRouter)
   .get('', ({ user }) => {
     return findOrganizationsForUser(user);
   })

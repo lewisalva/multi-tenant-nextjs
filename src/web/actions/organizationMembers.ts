@@ -1,30 +1,17 @@
 'use server'
 
-import { addUserToOrganization, findUsersInOrganization, removeUserFromOrganization, updateUserInOrganization } from '../../server/models/OrganizationMember';
+import { type DeleteUserOrganization, addUserToOrganization, findUsersInOrganization, removeUserFromOrganization, updateUserInOrganization, type UserOrganization, type CreateUserOrganization, type UpdateUserOrganization } from '../../server/models/OrganizationMember';
 import { findUserIdByEmail } from '../../server/models/User';
-import { type Schema } from '../services/client';
 import { queryClient } from '../services/queryClient';
 
-export type OrganizationMembersType =
-  Schema['api']['organizations'][':organizationId']['members']['get']['response']['200'];
-export type OrganizationMemberType = OrganizationMembersType[number];
-export type OrganizationMemberCreateType =
-  Schema['api']['organizations'][':organizationId']['members']['post']['body'];
-export type OrganizationMemberUpdateType =
-  Schema['api']['organizations'][':organizationId']['members'][':userId']['put']['body'];
-export type OrganizationMemberDeleteType = Pick<
-  OrganizationMemberType,
-  'organizationId' | 'userId'
->;
-
-const updateQueryClientWithMembers = (members: OrganizationMembersType): void => {
+const updateQueryClientWithMembers = (members: UserOrganization[]): void => {
   members.forEach((member) => {
     queryClient.setQueryData([`member.${member.organizationId}.${member.userId}`], member);
   });
 };
 
 export const getOrganizationMembers = async (
-  organizationId: OrganizationMemberType['organizationId']
+  organizationId: UserOrganization['organizationId']
 ) => {
   const data = await findUsersInOrganization(organizationId);
 
@@ -35,7 +22,7 @@ export const getOrganizationMembers = async (
   return data;
 };
 
-export const postOrganizationMember = async (body: OrganizationMemberCreateType) => {
+export const postOrganizationMember = async (body: { email?: string } & Partial<Pick<CreateUserOrganization, 'userId'>> & Omit<CreateUserOrganization, 'userId'>) => {
   let userId = body.userId;
   if (body.email) {
     userId = await findUserIdByEmail(body.email);
@@ -54,7 +41,7 @@ export const postOrganizationMember = async (body: OrganizationMemberCreateType)
   return true;
 };
 
-export const putOrganizationMember = async (body: OrganizationMemberUpdateType) => {
+export const putOrganizationMember = async (body: UpdateUserOrganization) => {
   await updateUserInOrganization(body);
 
   return true;
@@ -63,7 +50,7 @@ export const putOrganizationMember = async (body: OrganizationMemberUpdateType) 
 export const deleteOrganizationMember = async ({
   organizationId,
   userId,
-}: OrganizationMemberDeleteType) => {
+}: DeleteUserOrganization) => {
   await removeUserFromOrganization({
     userId,
     organizationId,

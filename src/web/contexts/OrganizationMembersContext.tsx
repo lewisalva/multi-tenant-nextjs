@@ -2,19 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 import { createContext, useState } from 'react';
 
 import { useOrganizationContext } from './useOrganizationContext';
-import { getOrganizationMembers, type OrganizationMemberType, type OrganizationMembersType } from '../actions/organizationMembers';
+import { getOrganizationMembers } from '../actions/organizationMembers';
+import { type UserOrganization } from '../../server/models/OrganizationMember';
 
 export type OrganizationMembersContextType = {
-  selectedOrganizationMember?: OrganizationMemberType;
-  setSelectedOrganizationMember: (member?: OrganizationMemberType) => void;
-  organizationMembers?: OrganizationMembersType;
+  selectedOrganizationMember?: UserOrganization;
+  setSelectedOrganizationMember: (member?: UserOrganization) => void;
+  organizationMembers?: UserOrganization[];
   isLoadingOrganizationMembers: boolean;
   reloadOrganizationMembers: () => Promise<void>;
 };
 
 type Props = {
   children: React.ReactNode;
-  members: OrganizationMembersType
+  members: UserOrganization[]
 };
 
 export const OrganizationMembersContext = createContext<OrganizationMembersContextType | null>(
@@ -23,7 +24,7 @@ export const OrganizationMembersContext = createContext<OrganizationMembersConte
 
 export const OrganizationMembersContextProvider = ({ children, members = [] }: Props) => {
   const [selectedOrganizationMember, setSelectedOrganizationMember] = useState<
-    OrganizationMemberType | undefined
+  UserOrganization | undefined
   >(undefined);
   const { selectedOrganization } = useOrganizationContext();
   const {
