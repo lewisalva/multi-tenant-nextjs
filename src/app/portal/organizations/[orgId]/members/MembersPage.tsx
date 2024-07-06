@@ -1,10 +1,10 @@
 'use client';
 
+import { type OrganizationMembers } from "../../../../../web/actions/organizationMembers";
 import { OrganizationMembersContextProvider } from "../../../../../web/contexts/OrganizationMembersContext";
-import { type OrganizationMembersType } from "../../../../../web/services/organizationMembers";
 import { MembersTable } from "./MembersTable";
 
-export default function Members({ members = [] }: { members: OrganizationMembersType }) {
+export default function Members({ members = [] }: { members: OrganizationMembers }) {
   return (
     <OrganizationMembersContextProvider members={members}>
       <MembersTable />

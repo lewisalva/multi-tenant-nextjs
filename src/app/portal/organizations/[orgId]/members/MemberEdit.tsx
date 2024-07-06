@@ -5,15 +5,14 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { type FormEvent, useState } from 'react';
 
 import { useOrganizationMembersContext } from '~/web/contexts/useOrganizationMembersContext';
-import { type OrganizationMemberType } from '~/web/services/organizationMembers';
-import { deleteOrganizationMember, putOrganizationMember } from '~/web/actions/organizationMembers';
+import { type OrganizationMembers, deleteOrganizationMember, putOrganizationMember } from '~/web/actions/organizationMembers';
 
 export const MemberEdit = ({
   closePanel,
   member,
 }: {
   closePanel: () => void;
-  member?: OrganizationMemberType;
+  member?: OrganizationMembers[number];
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { reloadOrganizationMembers } = useOrganizationMembersContext();

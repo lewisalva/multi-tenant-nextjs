@@ -3,28 +3,26 @@ import { createContext, useCallback, useEffect, useState } from 'react';
 
 import {
   getOrganizations,
-  type OrganizationCreateType,
-  type OrganizationsType,
-  type OrganizationType,
   postOrganization,
-} from '../services/organizations';
+} from '../actions/organizations';
+import { type CreateOrganization, type Organization } from '../../server/models/Organization';
 
 export type OrganizationContextType = {
-  selectedOrganization?: OrganizationType;
-  setSelectedOrganization: (org: OrganizationType) => void;
-  organizations: OrganizationsType;
-  createOrganization: (body: OrganizationCreateType) => Promise<void>;
+  selectedOrganization?: Organization;
+  setSelectedOrganization: (org: Organization) => void;
+  organizations: Organization[];
+  createOrganization: (body: CreateOrganization) => Promise<void>;
 };
 
 type Props = {
   children: React.ReactNode;
-  orgs?: OrganizationsType;
+  orgs?: Organization[];
 };
 
 export const OrganizationContext = createContext<OrganizationContextType | null>(null);
 
 export const OrganizationContextProvider = ({ children, orgs = [] }: Props) => {
-  const [selectedOrganization, setSelectedOrganization] = useState<OrganizationType | undefined>(orgs[0]);
+  const [selectedOrganization, setSelectedOrganization] = useState<Organization | undefined>(orgs[0]);
   const { data: organizations, refetch } = useQuery({
     queryKey: ['organizations'],
     queryFn: () => getOrganizations(),
@@ -33,7 +31,7 @@ export const OrganizationContextProvider = ({ children, orgs = [] }: Props) => {
   });
 
   const createOrganization = useCallback(
-    async ({ name }: OrganizationCreateType) => {
+    async ({ name }: CreateOrganization) => {
       const id = await postOrganization({ name });
       if (!id) throw new Error('Failed to create organization');
 

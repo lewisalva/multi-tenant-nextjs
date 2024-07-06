@@ -1,22 +1,15 @@
 'use server'
 
-import { cookies } from 'next/headers';
 import { type DeleteUserOrganization, addUserToOrganization, findUsersInOrganization, removeUserFromOrganization, updateUserInOrganization, type UserOrganization, type CreateUserOrganization, type UpdateUserOrganization } from '../../server/models/OrganizationMember';
 import { findUserIdByEmail } from '../../server/models/User';
 import { queryClient } from '../services/queryClient';
-import { lucia } from '../../server/globalMiddleware/authentication';
 import { isUserAdminForOrganization } from '../../server/globalMiddleware/authorization';
+import { getUserSession } from './session';
 
-const getCurrentUser = async () => {
-  const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
-  if (!sessionId) return null;
-  const { user } = await lucia.validateSession(sessionId);
 
-  return user;
-}
 
 const authorizeUser = async (organizationId: UserOrganization['organizationId']) => {
-  const user = await getCurrentUser();
+  const {user} = await getUserSession();
   if (!user) throw new Error('Unauthorized');
 
   const isOrganizationAdmin = await isUserAdminForOrganization(user, organizationId)
@@ -41,6 +34,7 @@ export const getOrganizationMembers = async (
 
   return data;
 };
+export type OrganizationMembers = Awaited<ReturnType<typeof getOrganizationMembers>>
 
 export const postOrganizationMember = async (body: { email?: string } & Partial<Pick<CreateUserOrganization, 'userId'>> & Omit<CreateUserOrganization, 'userId'>) => {
   await authorizeUser(body.organizationId)

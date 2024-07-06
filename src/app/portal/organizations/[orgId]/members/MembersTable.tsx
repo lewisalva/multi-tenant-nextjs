@@ -9,9 +9,9 @@ import { useOrganizationMembersContext } from '~/web/contexts/useOrganizationMem
 import { dayjs } from '~/web/utilities/dayjs';
 import { MemberAdd } from './MemberAdd';
 import { MemberEdit } from './MemberEdit';
-import { type OrganizationMembersType } from '../../../../../web/services/organizationMembers';
+import { type OrganizationMembers } from '../../../../../web/actions/organizationMembers';
 
-const Table = ({organizationMembers, setSelectedOrganizationMember}: { organizationMembers: OrganizationMembersType; setSelectedOrganizationMember: (member: OrganizationMembersType[number]) => void }) => {
+const Table = ({organizationMembers, setSelectedOrganizationMember}: { organizationMembers: OrganizationMembers; setSelectedOrganizationMember: (member: OrganizationMembers[number]) => void }) => {
   return (
     <div className="inline-block min-w-full border-b border-l border-r border-gray-200 align-middle">
       <table className="min-w-full">

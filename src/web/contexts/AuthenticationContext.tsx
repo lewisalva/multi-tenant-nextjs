@@ -2,11 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { createContext } from 'react';
 
 import { signin, signout, signup } from '~/web/services/auth';
-import { getUser, type User } from '~/web/services/users';
+import { getUser } from '~/web/actions/users';
+import { type SimpleUser } from '../../server/models/User';
 
 export type AuthenticationContextType = {
   isLoggedIn: boolean;
-  user?: User | null;
+  user?: SimpleUser | null;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -14,7 +15,7 @@ export type AuthenticationContextType = {
 
 type Props = {
   children: React.ReactNode;
-  user: User | null;
+  user: SimpleUser | null;
 };
 
 export const AuthenticationContext = createContext<AuthenticationContextType | null>(null);

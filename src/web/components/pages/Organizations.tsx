@@ -7,14 +7,14 @@ import { useMemo, useState } from 'react';
 import { ContentHeader } from '~/web/components/ContentHeader';
 import { SidePanel } from '~/web/components/SidePanel';
 import { useOrganizationContext } from '~/web/contexts/useOrganizationContext';
-import { type OrganizationType } from '~/web/services/organizations';
 import { colorByIndex/*, randomColor*/ } from '~/web/utilities/randomColor';
 import { OrganizationCreate } from './OrganizationCreate';
+import { type Organization } from '../../../server/models/Organization';
 
 type OrganizationCardProps = {
   isSelected?: boolean;
   loading?: boolean;
-  organization: OrganizationType;
+  organization: Organization;
   setSelectedOrganization: () => void;
   index: number;
 };

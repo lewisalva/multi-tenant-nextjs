@@ -3,9 +3,9 @@ import { type ReactNode, useState } from 'react';
 
 import { SiteNav } from '~/web/components/SiteNav';
 import { OrganizationContextProvider } from '~/web/contexts/OrganizationContext';
-import { type OrganizationsType } from '../../services/organizations';
+import { type Organization } from '../../../server/models/Organization';
 
-export default function Portal({ children, orgs = [] }: { children: ReactNode, orgs?: OrganizationsType }) {
+export default function Portal({ children, orgs = [] }: { children: ReactNode, orgs?: Organization[] }) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
