@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { createContext } from 'react';
 
-import { signin, signout, signup } from '~/web/services/auth';
+import { signin, signout, signup } from '~/web/actions/auth';
 import { getUser } from '~/web/actions/users';
 import { type SimpleUser } from '../../server/models/User';
 

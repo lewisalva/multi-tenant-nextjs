@@ -2,7 +2,7 @@
 
 import { type DeleteUserOrganization, addUserToOrganization, findUsersInOrganization, removeUserFromOrganization, updateUserInOrganization, type UserOrganization, type CreateUserOrganization, type UpdateUserOrganization } from '../../server/models/OrganizationMember';
 import { findUserIdByEmail } from '../../server/models/User';
-import { queryClient } from '../services/queryClient';
+import { queryClient } from '../utilities/queryClient';
 import { isUserAdminForOrganization } from '../../server/globalMiddleware/authorization';
 import { getUserSession } from './session';
 
