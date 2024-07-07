@@ -4,7 +4,7 @@ import {
   generateUsersAndOrgsForTest,
   type GenerateUsersAndOrgsType,
   toSimpleUser,
-} from '../tests/utils';
+} from './tests/utils';
 import {
   isUserAdminForOrganization,
   isUserAuthorizedForOrganization,

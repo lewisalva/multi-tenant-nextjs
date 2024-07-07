@@ -1,6 +1,9 @@
+'use server';
+
+// TODO: refactor to be a middleware
 import { cookies } from "next/headers";
 import { cache } from "react";
-import { lucia } from "../server/globalMiddleware/authentication";
+import { lucia } from "../server/authentication";
 
 export const auth = cache(async () => {
   const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;

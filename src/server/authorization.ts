@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm';
 import type { User } from 'lucia';
 
-import { usersOrganizationsTable } from '../db/schema';
-import { db } from '../db';
+import { usersOrganizationsTable } from './db/schema';
+import { db } from './db';
 
 type UserOrganization = (typeof usersOrganizationsTable)['$inferSelect'];
 

@@ -1,24 +1,24 @@
 import { and, eq } from 'drizzle-orm';
-import { createSelectSchema } from 'drizzle-typebox';
-import { type Static, t } from 'elysia';
+import { createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 import { db } from '~/server/db';
 import { usersOrganizationsTable } from '~/server/db/schema';
 
 export const selectUserOrganizationSchema = createSelectSchema(usersOrganizationsTable);
-export const createUserOrganizationSchema = t.Composite([
-  t.Pick(selectUserOrganizationSchema, ['organizationId', 'userId']),
-  t.Partial(t.Pick(selectUserOrganizationSchema, ['permission'])),
-]);
-export const createUserOrganizationWithEmailSchema = t.Composite([
-  t.Pick(selectUserOrganizationSchema, ['organizationId']),
-  t.Partial(t.Pick(selectUserOrganizationSchema, ['userId'])),
-  t.Partial(t.Pick(selectUserOrganizationSchema, ['permission'])),
-  t.Partial(t.Object({ email: t.String() })),
-]);
+export const createUserOrganizationSchema = selectUserOrganizationSchema.pick({
+  organizationId: true,
+  userId: true,
+  permission: true,
+}).partial({permission: true});
+export const createUserOrganizationWithEmailSchema = selectUserOrganizationSchema.pick({
+  organizationId: true,
+  userId: true,
+  permission: true,
+}).partial({permission: true, userId: true}).extend({email: z.string()});
 
-export type UserOrganization = Static<typeof selectUserOrganizationSchema>;
-export type CreateUserOrganization = Static<typeof createUserOrganizationSchema>;
+export type UserOrganization = z.infer<typeof selectUserOrganizationSchema>;
+export type CreateUserOrganization = z.infer<typeof createUserOrganizationSchema>;
 export type UpdateUserOrganization = CreateUserOrganization;
 export type DeleteUserOrganization = Omit<CreateUserOrganization, 'permission'>;
 

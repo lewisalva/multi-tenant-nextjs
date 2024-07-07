@@ -1,9 +1,8 @@
-import { treaty } from '@elysiajs/eden';
 import { type User } from 'lucia';
 
-import { authRouter } from '~/server/routes/auth/auth.router';
 import { organizationsTable, usersOrganizationsTable, usersTable } from '~/server/db/schema';
 import { db } from '../db';
+import { createSessionCookie, findUserIdByEmail } from '../models/User';
 
 const TEST_USER_PASSWORD = process.env.INITIAL_ADMIN_PASS ?? '123456';
 
@@ -15,8 +14,6 @@ type CreateUser = {
   id?: string;
 };
 
-const authApi = treaty(authRouter);
-
 const headersMap: Record<string, Headers> = {};
 
 export const getAuthHeaders = async (email = 'lewis@j1.support') => {
@@ -24,13 +21,13 @@ export const getAuthHeaders = async (email = 'lewis@j1.support') => {
     return Object.fromEntries(headersMap[email]!);
   }
 
-  const { headers } = await authApi.auth.signin.post({
-    email,
-    password: TEST_USER_PASSWORD,
-  });
+  const userId = await findUserIdByEmail(email);
+  if (!userId) {
+    return new Error('Not Found');
+  }
 
-  const [cookie] = (headers as Headers).getSetCookie();
-
+  const sessionCookie = await createSessionCookie(userId);
+  const cookie = sessionCookie.serialize();
   const newHeaders = new Headers();
   newHeaders.set('cookie', cookie ?? '');
   newHeaders.set('origin', 'http://localhost:3000');

@@ -1,6 +1,6 @@
 'use server';
 
-import { isUserAdminForOrganization, isUserPlatformAdmin } from "../../server/globalMiddleware/authorization";
+import { isUserAdminForOrganization, isUserPlatformAdmin } from "../../server/authorization";
 import { type UpdateOrganization, type CreateOrganization, findOrganizationsForUser, createOrganization, updateOrganization } from "../../server/models/Organization";
 import { getUserSession } from "./session";
 

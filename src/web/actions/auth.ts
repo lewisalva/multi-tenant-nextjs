@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { type SignUpUser, createSessionCookie, createUser, type LoginUser, checkUserPassword } from "../../server/models/User";
 import { getUserSession } from "./session";
-import { lucia } from "../../server/globalMiddleware/authentication";
+import { lucia } from "../../server/authentication";
 
 export const signin = async ({email, password}: LoginUser) => {
   const user = await checkUserPassword({ email, password });

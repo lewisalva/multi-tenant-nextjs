@@ -1,29 +1,26 @@
 import { eq } from 'drizzle-orm';
-import { createSelectSchema } from 'drizzle-typebox';
-import { type Static, t } from 'elysia';
+import { createSelectSchema } from 'drizzle-zod';
 
-import { lucia } from '../globalMiddleware/authentication';
+import { lucia } from '../authentication';
 import { db } from '../db';
 import { usersTable } from '../db/schema';
+import { z } from 'zod';
 
 export const selectUserSchema = createSelectSchema(usersTable);
 
-export const loginUserSchema = t.Object({
-  email: t.String({ format: 'email', error: 'Invalid email' }),
-  password: t.String({ minLength: 6, error: 'Invalid password' }),
+export const loginUserSchema = z.object({
+  email: z.string({ message: 'Invalid email' }).email(),
+  password: z.string({ message: 'Invalid password' }).min(6),
 });
 
-export const signUpUserSchema = t.Composite([
-  loginUserSchema,
-  t.Object({ name: t.String({ minLength: 1, error: 'Invalid name' }) }),
-]);
+export const signUpUserSchema = loginUserSchema.extend({ name: z.string({ message: 'Invalid name' }).min(1) });
 
-export const updateUserSchema = t.Pick(selectUserSchema, ['name']);
+export const updateUserSchema = selectUserSchema.pick({ name: true });
 
-export type User = Static<typeof selectUserSchema>;
-export type LoginUser = Static<typeof loginUserSchema>;
-export type SignUpUser = Static<typeof signUpUserSchema>;
-export type UpdateUser = Static<typeof updateUserSchema>;
+export type User = z.infer<typeof selectUserSchema>;
+export type LoginUser = z.infer<typeof loginUserSchema>;
+export type SignUpUser = z.infer<typeof signUpUserSchema>;
+export type UpdateUser = z.infer<typeof updateUserSchema>;
 export type SimpleUser = Pick<User, 'id' | 'email' | 'name' | 'isPlatformAdmin'>;
 
 export const findUserIdByEmail = async (email: User['email']) => {

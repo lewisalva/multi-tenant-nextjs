@@ -1,16 +1,16 @@
 import { and, asc, eq } from 'drizzle-orm';
-import { createSelectSchema } from 'drizzle-typebox';
-import { type Static, t } from 'elysia';
+import { createSelectSchema } from 'drizzle-zod';
 import { type User } from 'lucia';
+import { type z } from 'zod';
 
 import { db } from '~/server/db';
 import { organizationsTable, usersOrganizationsTable } from '~/server/db/schema';
 
 export const selectOrganizationSchema = createSelectSchema(organizationsTable);
-export const createOrganizationSchema = t.Pick(selectOrganizationSchema, ['name']);
+export const createOrganizationSchema = selectOrganizationSchema.pick({ name: true });
 
-export type Organization = Static<typeof selectOrganizationSchema>;
-export type CreateOrganization = Static<typeof createOrganizationSchema>;
+export type Organization = z.infer<typeof selectOrganizationSchema>;
+export type CreateOrganization = z.infer<typeof createOrganizationSchema>;
 export type UpdateOrganization = Pick<Organization, 'id' | 'name'>;
 
 export const findOrganizationsForUser = (user: User) => {
