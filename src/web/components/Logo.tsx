@@ -1,8 +1,9 @@
 export const Logo = ({ className = 'h-8 w-auto' }) => {
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       className={className}
-      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+      src="/images/logo.svg"
       alt="J1Support"
     />
   );
