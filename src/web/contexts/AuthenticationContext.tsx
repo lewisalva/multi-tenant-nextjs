@@ -1,16 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { createContext } from 'react';
 
-import { signin, signout, signup } from '~/web/actions/auth';
 import { getUser } from '~/web/actions/users';
 import { type SimpleUser } from '../../server/models/User';
 
 export type AuthenticationContextType = {
   isLoggedIn: boolean;
   user?: SimpleUser | null;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (name: string, email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  refetch: () => Promise<void>;
 };
 
 type Props = {
@@ -28,30 +25,10 @@ export const AuthenticationContextProvider = ({ children, user }: Props) => {
     staleTime: 5000,
   });
 
-  const signIn = async (email: string, password: string) => {
-    await signin({ email, password });
-
-    await refetch();
-  };
-
-  const signUp = async (name: string, email: string, password: string) => {
-    await signup({ name, email, password });
-
-    await refetch();
-  };
-
-  const signOut = async () => {
-    await signout();
-
-    await refetch();
-  };
-
   const defaultValue: AuthenticationContextType = {
     user: currentUser,
     isLoggedIn: !!currentUser,
-    signIn,
-    signUp,
-    signOut,
+    refetch: async () => {await refetch()},
   };
 
   return (

@@ -6,6 +6,7 @@ import { Fragment } from 'react';
 import { useAuthenticationContext } from '../contexts/useAuthenticationContext';
 import { useOrganizationContext } from '../contexts/useOrganizationContext';
 import Link from 'next/link';
+import { signout } from '../actions/auth';
 
 const MenuItems = () => {
   const itemGroups = [
@@ -14,14 +15,15 @@ const MenuItems = () => {
       { name: 'Notifications', to: '', isDisabled: true },
     ],
     [{ name: 'Support', to: '', isDisabled: true }],
-    [{ name: 'Logout', to: '/portal/signout', isDisabled: false }],
-  ];
+    [{ name: 'Logout', to: '', isDisabled: false, onClick: signout }],
+  ] as const;
 
   return itemGroups.map((group, index) => (
     <div key={`group-${index}`} className="py-1">
       {group.map((item) => (
         <Menu.Item key={item.name} disabled={item.isDisabled}>
           {({ active }) => (
+            item.name !== 'Logout' ? (
             <Link
               href={item.to}
               className={clsx(
@@ -31,7 +33,13 @@ const MenuItems = () => {
               )}
             >
               {item.name}
-            </Link>
+            </Link>) : (
+              <a onClick={() => item.onClick()} className={clsx(
+                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                item.isDisabled ? 'cursor-not-allowed' : 'cursor-pointer',
+                'block px-4 py-2 text-sm'
+              )}>{item.name}</a>
+            )
           )}
         </Menu.Item>
       ))}

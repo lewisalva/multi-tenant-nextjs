@@ -1,4 +1,4 @@
-'use server'
+'use server';
 
 import { type DeleteUserOrganization, addUserToOrganization, findUsersInOrganization, removeUserFromOrganization, updateUserInOrganization, type UserOrganization, type CreateUserOrganization, type UpdateUserOrganization } from '../../server/models/OrganizationMember';
 import { findUserIdByEmail } from '../../server/models/User';

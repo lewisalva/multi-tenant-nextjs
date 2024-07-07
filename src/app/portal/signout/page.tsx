@@ -1,12 +1,8 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { lucia } from "../../../server/globalMiddleware/authentication";
+import { signout } from "../../../web/actions/auth";
 
 export default async function SignOutPage() {
-  const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
-  sessionId && (await lucia.invalidateSession(sessionId));
-
-  cookies().set(lucia.sessionCookieName, '', { expires: new Date(0) });
+  await signout();
 
   return redirect('/signin');
 }

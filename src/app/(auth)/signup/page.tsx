@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 import { type FormEvent } from 'react';
 
 import { Logo } from '~/web/components/Logo';
-import { useAuthenticationContext } from '~/web/contexts/useAuthenticationContext';
+import { signup } from '../../../web/actions/auth';
+import { useAuthenticationContext } from '../../../web/contexts/useAuthenticationContext';
 
 const Signup = () => {
   const router = useRouter();
-  const { signUp } = useAuthenticationContext();
+  const { refetch } = useAuthenticationContext();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,7 +21,9 @@ const Signup = () => {
       password: data.get('password')!.toString() + '',
     };
     try {
-      await signUp(name, email, password);
+      await signup({ name, email, password });
+      await refetch();
+
       router.push('/portal');
     } catch (error) {
       console.error(error);

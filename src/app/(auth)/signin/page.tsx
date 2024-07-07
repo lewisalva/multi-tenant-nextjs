@@ -6,10 +6,11 @@ import { Logo } from '~/web/components/Logo';
 import { useAuthenticationContext } from '~/web/contexts/useAuthenticationContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signin } from '../../../web/actions/auth';
 
 const Signin = () => {
   const router = useRouter();
-  const { signIn } = useAuthenticationContext();
+  const { refetch } = useAuthenticationContext();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -19,7 +20,9 @@ const Signin = () => {
       password: data.get('password')?.toString() + '',
     };
     try {
-      await signIn(body.email, body.password);
+      await signin({ email: body.email, password: body.password });
+      await refetch();
+
       router.push('/portal');
     } catch (error) {
       console.error(error);
